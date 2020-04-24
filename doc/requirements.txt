@@ -1,0 +1,8 @@
+numpy==1.16.4
+tensorflow-gpu==1.12.0
+opencv-python==3.4.5.20
+opencv-contrib-python==3.4.5.20
+tqdm==4.35.0
+easydict==1.9
+imgaug==0.3.0
+pyclipper==1.1.0.post3
