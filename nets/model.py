@@ -7,6 +7,7 @@ from config.config import cfg
 
 from nets.resnet import resnet_v1 as resnet_v1
 from nets.resnet import resnet_v1_tiny as resnet_v1_tiny
+from nets.mobilenet.mobilenet_v2 import mobilenet_v2_050
 
 
 def unpool(inputs, ratio=2):
@@ -38,6 +39,9 @@ def backbone(input, weight_decay, is_training, backbone_name=cfg.BACKBONE):
         with slim.arg_scope(resnet_v1_tiny.resnet_arg_scope(weight_decay=weight_decay)):
             logits, end_points = resnet_v1_tiny.resnet_v1_18(input, is_training=is_training, scope=backbone_name)
         return logits, end_points
+    elif backbone_name == 'mobilenet_v2_050':
+        logits, end_points = mobilenet_v2_050(input, base_only=True, is_training = is_training)
+        return logits, end_points
     else:
         print('{} is error backbone name, not support!'.format(backbone_name))
         assert 0
@@ -68,9 +72,12 @@ def model(images, weight_decay=1e-5, is_training=True):
                             normalizer_fn=slim.batch_norm,
                             normalizer_params=batch_norm_params,
                             weights_regularizer=slim.l2_regularizer(weight_decay)):
-
-            f = [end_points['pool5'], end_points['pool4'],
-                 end_points['pool3'], end_points['pool2']]
+            if cfg.BACKBONE == 'mobilenet_v2_050':
+                f = [end_points['layer_19'], end_points['layer_14'],
+                     end_points['layer_7'], end_points['layer_4']]
+            else:
+                f = [end_points['pool5'], end_points['pool4'],
+                     end_points['pool3'], end_points['pool2']]
 
             g = [None, None, None, None]
             h = [None, None, None, None]
