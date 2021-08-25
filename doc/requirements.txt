@@ -1,5 +1,5 @@
 numpy==1.16.4
-tensorflow-gpu==1.12.0
+tensorflow-gpu==2.5.1
 opencv-python==3.4.5.20
 opencv-contrib-python==3.4.5.20
 tqdm==4.35.0
